@@ -11,11 +11,16 @@ public class Script_PlayerMovement : MonoBehaviour
     [Header("Movement Values")]
     private Vector3 moveInput;
     private Vector3 moveForce;
-    [SerializeField] private float speed;
+
+    [SerializeField] public float speed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float drag;
     [SerializeField] private float steerStrength;
-    [SerializeField] protected bool isCapsized;
+
+    [Header("Capsize Values")]
+    [SerializeField] private bool isCapsized;
+    [SerializeField] private float rotationTime;
+    [SerializeField] private float rotationSpeed;
 
     private void Update()
     {
@@ -70,7 +75,16 @@ public class Script_PlayerMovement : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                this.transform.rotation = Quaternion.identity;
+                /*
+                Vector3 oldRotation += transform.rotation;
+                Vector3 newRotation = new Vector3(transform.rotation.x, 0, transform.rotation.z);
+
+                transform.rotation = Vector3.Lerp(transform.rotation, newRotation, Time.deltaTime * 3f);
+                */
+                Vector3 newRotation = new Vector3(transform.rotation.x, 0, transform.rotation.z);
+
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.rotation.x, 0, transform.rotation.z), rotationTime * rotationSpeed);
+                rotationTime = rotationTime + Time.deltaTime;
                 isCapsized = false;
             }
         }
